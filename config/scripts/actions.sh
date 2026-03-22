@@ -19,20 +19,20 @@ ICON_BOOT="⚙️"
 
 # Options List
 options=(
-    "$ICON_MODE  SERVER MODE (Kill GUI, Save Power)"
-    "$ICON_DESK  DESKTOP MODE (All Systems Go)"
-    "$ICON_BOOT  Boot to CLI (Next Restart)"
-    "$ICON_BOOT  Boot to GUI (Next Restart)"
+    "$ICON_MODE  SERVER MODE"
+    "$ICON_DESK  DESKTOP MODE"
+    "$ICON_BOOT  Boot to CLI"
+    "$ICON_BOOT  Boot to GUI"
     "$ICON_TRANS Translate Selection (-> IT)"
-    "$ICON_OCR   Extract Text from Area (OCR)"
+    "$ICON_OCR   Extract Text (OCR)"
     "$ICON_COLOR Pick Color (Hex)"
-    "$ICON_DICT  Define Word (Clipboard/Input)"
-    "$ICON_LAB   Lab UP (Docker & Minikube)"
-    "$ICON_LAB   Lab DOWN (Save Battery)"
-    "$ICON_POWER Power Save (TLP On)"
-    "$ICON_POWER Max Performance (TLP Off)"
-    "$ICON_RADIO Radio ON (Wi-Fi & BT)"
-    "$ICON_RADIO Radio OFF (Airplane Mode)"
+    "$ICON_DICT  Define Word"
+    "$ICON_LAB   Lab UP"
+    "$ICON_LAB   Lab DOWN"
+    "$ICON_POWER Power Save"
+    "$ICON_POWER Max Performance"
+    "$ICON_RADIO Radio ON"
+    "$ICON_RADIO Radio OFF"
     "$ICON_THEME Change Wallpaper & Theme"
     "$ICON_CLIP  Clipboard History"
 )
@@ -44,7 +44,6 @@ choice=$(printf "%s\n" "${options[@]}" | rofi -dmenu -i -p "󱐌 Quick Actions" 
 case "$choice" in
     *"SERVER MODE"*)
         notify-send "System" "Activating Server Mode..."
-        # Logic from server-mode alias
         sudo systemctl isolate multi-user.target &
         sudo rfkill block bluetooth &
         minikube stop &
@@ -54,8 +53,7 @@ case "$choice" in
         ;;
     *"DESKTOP MODE"*)
         notify-send "System" "Activating Desktop Mode..."
-        # Logic from desktop-mode alias
-        sudo systemctl start tlp & # ensure tlp logic is handled or stopped
+        sudo systemctl start tlp &
         sudo systemctl stop tlp &
         sudo rfkill unblock bluetooth wifi &
         sudo systemctl isolate graphical.target &
@@ -97,18 +95,6 @@ case "$choice" in
     *"Lab DOWN"*)
         notify-send "Lab" "Stopping Lab..."
         minikube stop && sudo systemctl stop docker && notify-send "Lab" "💤 Lab Offline."
-        ;;
-    *"Power Save"*)
-        sudo systemctl start tlp && notify-send "Power" "🍃 TLP Enabled"
-        ;;
-    *"Max Performance"*)
-        sudo systemctl stop tlp && notify-send "Power" "🔥 Performance Mode"
-        ;;
-    *"Radio ON"*)
-        sudo rfkill unblock bluetooth wifi && notify-send "Radio" "📡 Radios Active"
-        ;;
-    *"Radio OFF"*)
-        sudo rfkill block bluetooth wifi && notify-send "Radio" "📡 Airplane Mode"
         ;;
     *"Change Wallpaper"*)
         ~/.config/scripts/theme.sh
