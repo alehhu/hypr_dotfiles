@@ -1,0 +1,79 @@
+@import "~/.cache/wal/colors-rofi-dark.rasi"
+
+configuration {
+    modi:                        "drun";
+    show-icons:                  true;
+    drun-display-format:         "{name}";
+}
+
+window {
+    width:                        800px;
+    height:                       600px;
+    border:                       2px;
+    border-color:                 @active-background;
+    border-radius:                12px;
+    background-color:             @background;
+}
+
+mainbox {
+    spacing:                     10px;
+    padding:                     20px;
+    children:                    [ "inputbar", "listview" ];
+}
+
+inputbar {
+    enabled:                      true;
+    spacing:                      10px;
+    margin:                       0px 0px 10px 0px;
+    padding:                      10px;
+    border-radius:                8px;
+    background-color:             @background;
+    text-color:                   @foreground;
+    children:                     [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:                      true;
+    content:                      "󰸉 ";
+    background-color:             inherit;
+    text-color:                   inherit;
+}
+
+entry {
+    placeholder:                  "Search wallpapers...";
+    background-color:             inherit;
+    text-color:                   inherit;
+}
+
+listview {
+    columns:                     3;
+    lines:                       3;
+    spacing:                     15px;
+    layout:                      vertical;
+    fixed-columns:               true;
+}
+
+element {
+    orientation:                 vertical;
+    padding:                     10px;
+    border-radius:               12px;
+    background-color:            transparent;
+}
+
+element selected.normal {
+    background-color:            @active-background;
+    text-color:                  @background;
+}
+
+element-icon {
+    size:                        150px;
+    cursor:                      inherit;
+    horizontal-align:            0.5;
+}
+
+element-text {
+    horizontal-align:            0.5;
+    vertical-align:              0.5;
+    padding:                     5px;
+    text-color:                  inherit;
+}
