@@ -1,0 +1,116 @@
+@import "~/.cache/wal/colors-rofi-dark.rasi"
+
+* {
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    width:                        600px;
+    x-offset:                     0px;
+    y-offset:                     0px;
+    spacing:                      0px;
+    padding:                      0px;
+    margin:                       0px; 
+    color:                        @foreground;
+    background-color:             @background;
+    border:                       2px;
+    border-color:                 @active-background;
+    border-radius:                12px;
+    cursor:                       "default";
+    transparency:                 "real";
+    location:                     center;
+    anchor:                       center;
+    fullscreen:                   false;
+    enabled:                      true;
+}
+
+mainbox {
+    enabled:                      true;
+    spacing:                      0px;
+    margin:                       0px;
+    padding:                      20px;
+    background-color:             transparent;
+    children:                     [ "inputbar", "listview" ];
+}
+
+inputbar {
+    enabled:                      true;
+    spacing:                      10px;
+    margin:                       0px 0px 10px 0px;
+    padding:                      10px;
+    border-radius:                8px;
+    background-color:             @background;
+    text-color:                   @foreground;
+    children:                     [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:                      true;
+    background-color:             inherit;
+    text-color:                   inherit;
+}
+
+entry {
+    enabled:                      true;
+    background-color:             inherit;
+    text-color:                   inherit;
+    cursor:                       text;
+    placeholder:                  "Search...";
+    placeholder-color:            inherit;
+}
+
+listview {
+    enabled:                      true;
+    columns:                      1;
+    lines:                        8;
+    cycle:                        true;
+    dynamic:                      true;
+    scrollbar:                    false;
+    layout:                       vertical;
+    reverse:                      false;
+    fixed-height:                 true;
+    fixed-columns:                true;
+    spacing:                      5px;
+    margin:                       0px;
+    padding:                      0px;
+    background-color:             transparent;
+    text-color:                   @foreground;
+    cursor:                       "default";
+}
+
+element {
+    enabled:                      true;
+    spacing:                      10px;
+    margin:                       0px;
+    padding:                      8px;
+    border-radius:                8px;
+    background-color:             transparent;
+    text-color:                   @foreground;
+    cursor:                       pointer;
+}
+
+element normal.normal {
+    background-color:            transparent;
+    text-color:                  @foreground;
+}
+
+element selected.normal {
+    background-color:            @active-background;
+    text-color:                  @background;
+}
+
+element-icon {
+    background-color:            transparent;
+    text-color:                  inherit;
+    size:                        24px;
+    cursor:                      inherit;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    highlight:                   inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}

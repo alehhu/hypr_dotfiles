@@ -1,0 +1,55 @@
+format = """
+[ ](bg:color0 fg:color0)\
+$os\
+$username\
+[](bg:color1 fg:color0)\
+$directory\
+[](fg:color1 bg:color2)\
+$git_branch\
+$git_status\
+[](fg:color2 bg:color3)\
+$python\
+$rust\
+$golang\
+[](fg:color3 bg:color4)\
+$time\
+[ ](fg:color4)\
+$character"""
+
+[os]
+disabled = false
+format = "[$symbol]($style)"
+style = "bg:color0 fg:color7"
+
+[os.symbols]
+Arch = "󰣇 "
+
+[username]
+show_always = true
+style_user = "bg:color0 fg:color7"
+format = "[$user]($style)"
+
+[directory]
+style = "bg:color1 fg:color0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "bg:color2 fg:color0"
+format = "[[ $symbol $branch ]($style)]($style)"
+
+[git_status]
+style = "bg:color2 fg:color0"
+format = "[[($all_status$ahead_behind )]($style)]($style)"
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:color4 fg:color0"
+format = "[[ 󱑎 $time ]($style)]($style)"
+
+[character]
+success_symbol = "[ 󰄬 ](bold green)"
+error_symbol = "[ 󰅖 ](bold red)"

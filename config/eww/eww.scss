@@ -1,0 +1,122 @@
+@import "../../.cache/wal/colors-eww.scss";
+
+* {
+  all: unset;
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window {
+  background-color: transparent;
+}
+
+/* All Pills Base Style */
+.launcher-pill,
+.workspaces-pill,
+.clock-pill,
+.status-pill,
+.resource-pill,
+.control-pill {
+  background-color: $bg;
+  border-radius: 14px;
+  border: 2px solid $color1;
+  padding: 0 16px;
+  min-height: 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  transition: border-color 0.3s ease-in-out;
+}
+
+.launcher-pill:hover,
+.workspaces-pill:hover,
+.clock-pill:hover,
+.status-pill:hover,
+.resource-pill:hover,
+.control-pill:hover {
+  border-color: $color2;
+}
+
+/* Individual Pill Specifics */
+.launcher-pill {
+  color: $color2;
+  font-size: 20px;
+  padding: 0 12px;
+}
+
+.workspace-btn {
+  color: $color7;
+  font-size: 18px;
+  margin: 0 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+.workspace-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: $color2;
+}
+.workspace-btn.active {
+  color: $color2;
+  font-weight: bold;
+}
+
+.ws-icon, .ws-num {
+  min-width: 24px;
+}
+
+.ws-num {
+  font-size: 16px;
+  color: $color4;
+  font-weight: bold;
+}
+
+.clock-pill {
+  font-weight: bold;
+}
+.date-text { color: $color4; }
+.time-text { color: $color2; }
+
+.status-pill, .resource-pill, .control-pill {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.wifi-text { color: $color5; }
+.weather-text { color: $color4; }
+.notif-text { color: $color2; }
+
+.cpu-text { color: $color3; }
+.mem-text { color: $color6; }
+
+.vol-text { color: $color1; }
+.power-btn {
+  color: $color1;
+  font-size: 16px;
+  padding-left: 5px;
+}
+.power-btn:hover {
+  color: $color4;
+}
+
+/* Dashboard */
+.dashboard-bg {
+  background-color: rgba(0,0,0,0.7);
+  padding: 100px;
+}
+.dashboard-title {
+  color: $color1;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+.action-btn {
+  background-color: $bg;
+  color: $fg;
+  border-radius: 24px;
+  border: 4px solid $color2;
+  min-width: 150px;
+  min-height: 150px;
+  padding: 20px;
+}
+.action-btn:hover {
+  background-color: $color2;
+  color: $bg;
+  border-color: $fg;
+}

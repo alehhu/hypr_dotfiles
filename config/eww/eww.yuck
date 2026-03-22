@@ -1,0 +1,83 @@
+(include "dashboard.yuck")
+
+;; Variables
+(defvar show_numbers false)
+
+;; Listeners
+(deflisten workspace_widget "scripts/workspaces.sh")
+
+;; Polls
+(defpoll time_text :interval "1s" "date '+%H:%M'")
+(defpoll date_text :interval "10s" "date '+%a %d %b'")
+(defpoll volume_level :interval "1s" "amixer get Master | grep -oP '\\[\\d+%%\\]' | head -1 | tr -d '[]%'")
+(defpoll wifi_ssid :interval "10s" "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2 || echo 'Offline'")
+(defpoll weather_temp :interval "30m" "curl -s 'wttr.in/?format=%t' | tr -d '+'")
+(defpoll notification_count :interval "1s" "swaync-client -c")
+
+;; Window Definition
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                       :y "8px"
+                       :width "98%"
+                       :height "42px"
+                       :anchor "top center")
+  :exclusive true
+  (bar_layout))
+
+(defwidget bar_layout []
+  (centerbox :class "bar-inner"
+    (left_modules)
+    (center_modules)
+    (right_modules)))
+
+;; Left Section: Workspaces & Dashboard
+(defwidget left_modules []
+  (eventbox :onhover "${EWW_CMD} update show_numbers=true"
+            :onhoverlost "${EWW_CMD} update show_numbers=false"
+    (box :orientation "h" :halign "start" :spacing 12 :space-evenly false
+      (pill :class "launcher-pill"
+        (button :onclick "eww open --toggle dashboard" "󰣇"))
+      (literal :content workspace_widget))))
+
+;; Center Section: Focused Time & Date
+(defwidget center_modules []
+  (box :orientation "h" :halign "center" :space-evenly false
+    (pill :class "clock-pill"
+      (button :onclick "eww open --toggle calendar_popup"
+        (box :spacing 12 :space-evenly false
+          (label :text "󰃭 ${date_text}" :class "date-text")
+          (label :text "󱑎 ${time_text}" :class "time-text"))))))
+
+;; Right Section: System Status & Controls
+(defwidget right_modules []
+  (box :orientation "h" :halign "end" :spacing 10 :space-evenly false
+    ;; Status Pill (Wifi, Weather, Notifications)
+    (pill :class "status-pill"
+      (box :spacing 15 :space-evenly false
+        (button :onclick "kitty --class nmtui -e nmtui &"
+          (label :text "󰖩 ${wifi_ssid}" :class "wifi-text"))
+        (label :text "󰖐 ${weather_temp}" :class "weather-text")
+        (button :onclick "swaync-client -t -sw"
+          (label :text "󰂚 ${notification_count}" :class "notif-text"))))
+    
+    ;; Resources Pill (CPU, RAM)
+    (pill :class "resource-pill"
+      (box :spacing 15 :space-evenly false
+        (button :onclick "kitty --class btop -e btop &"
+          (box :spacing 15 :space-evenly false
+            (label :text " ${round(EWW_CPU.avg, 0)}%" :class "cpu-text")
+            (label :text " ${round(EWW_RAM.used_mem_perc, 0)}%" :class "mem-text")))))
+
+    ;; Control Pill (Volume, Power)
+    (pill :class "control-pill"
+      (box :spacing 15 :space-evenly false
+        (button :onclick "pavucontrol &"
+          (label :text " ${volume_level}%" :class "vol-text"))
+        (button :onclick "wlogout &" :class "power-btn" "󰐥")))))
+
+;; Reusable Pill Template
+(defwidget pill [class]
+  (box :class class
+    (children)))

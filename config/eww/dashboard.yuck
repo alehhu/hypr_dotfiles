@@ -1,0 +1,33 @@
+(defwindow dashboard
+  :monitor 0
+  :windowtype "dock"
+  :geometry (geometry :x "0%"
+                       :y "0%"
+                       :width "100%"
+                       :height "100%"
+                       :anchor "center")
+  :exclusive false
+  (dashboard_layout))
+
+(defwidget dashboard_layout []
+  (box :class "dashboard-bg"
+       :orientation "v"
+       :space-evenly false
+    (box :class "dashboard-header"
+         :orientation "h"
+         :halign "center"
+      (label :text "Quick Actions" :class "dashboard-title"))
+    (box :class "dashboard-grid"
+         :orientation "h"
+         :halign "center"
+         :spacing 30
+      (action_button :label "󰈹" :cmd "firefox & eww close dashboard")
+      (action_button :label "󰆍" :cmd "kitty & eww close dashboard")
+      (action_button :label "󰙯" :cmd "discord & eww close dashboard")
+      (action_button :label "󰓓" :cmd "steam & eww close dashboard")
+      (action_button :label "󰝚" :cmd "spotify & eww close dashboard"))))
+
+(defwidget action_button [label cmd]
+  (button :class "action-btn"
+          :onclick cmd
+    (label :text label :font-size 40)))
