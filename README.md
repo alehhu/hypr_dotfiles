@@ -1,4 +1,4 @@
-# ❄️ Ale's Hyprland Dotfiles
+# ❄️ My Hyprland Dotfiles
 
 A portable, macOS-inspired Hyprland setup with dynamic Pywal integration and a "Pro" Quick Action workflow.
 
