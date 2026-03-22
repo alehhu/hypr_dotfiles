@@ -6,7 +6,7 @@ A portable, macOS-inspired Hyprland setup with dynamic Pywal integration and a "
 
 1. **Clone the repo**:
    ```bash
-   git clone <your-repo-url> ~/dotfiles
+   git clone (https://github.com/alehhu/hypr_dotfiles.git) ~/dotfiles
    cd ~/dotfiles
    ```
 
