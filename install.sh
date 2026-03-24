@@ -4,76 +4,71 @@
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$HOME/.config"
 
-# --- CATEGORIZED PACKAGES ---
-
-# 1. Core Desktop Environment (The "Unixporn" base)
-CORE_DE=(
-    "hyprland" "hyprlock" "hyprpicker" "waybar" "swaync" "wlogout" "swww" 
-    "rofi-wayland" "kitty" "starship" "yazi" "python-pywal" "jq" 
-    "grim" "slurp" "wl-clipboard" "tesseract" "tesseract-data-eng" "tesseract-data-ita"
-    "translate-shell" "brightnessctl" "pavucontrol" "nm-connection-editor"
-    "ttf-jetbrains-mono-nerd" "papirus-icon-theme" "xdotool" "rofimoji"
-    "eww" "fastfetch" "btop" "cava"
-)
-
-# 2. Daily Driver Apps
-APPS=(
-    "firefox" "discord" "spotify-launcher" "steam" "thunar" "gvfs" "thunar-archive-plugin"
-)
-
-# 3. Development Tools (From your aliases)
-DEV_TOOLS=(
-    "docker" "docker-compose" "minikube" "kubectl" "vim" "git" "base-devel" "tlp"
-)
-
-ALL_PACKAGES=("${CORE_DE[@]}" "${APPS[@]}" "${DEV_TOOLS[@]}")
-
 echo "🚀 Starting Portable Dotfiles Installation..."
 
-# Install Dependencies
-if command -v paru &> /dev/null; then
-    echo "📦 Installing everything using paru..."
-    paru -S --needed --noconfirm "${ALL_PACKAGES[@]}"
-elif command -v yay &> /dev/null; then
-    echo "📦 Installing everything using yay..."
-    yay -S --needed --noconfirm "${ALL_PACKAGES[@]}"
-else
-    echo "📦 No AUR helper found. Using pacman (will skip AUR-only pkgs like spotify)..."
-    sudo pacman -S --needed --noconfirm "${ALL_PACKAGES[@]}"
+# 1. Install Dependencies from Package Lists (The most accurate way)
+if [ -f "$DOTFILES_DIR/pkglist.txt" ]; then
+    echo "📦 Installing core packages from pkglist.txt..."
+    sudo pacman -S --needed --noconfirm - < "$DOTFILES_DIR/pkglist.txt"
+fi
+
+if [ -f "$DOTFILES_DIR/aur_pkglist.txt" ]; then
+    if command -v paru &> /dev/null; then
+        echo "📦 Installing AUR packages using paru..."
+        paru -S --needed --noconfirm - < "$DOTFILES_DIR/aur_pkglist.txt"
+    elif command -v yay &> /dev/null; then
+        echo "📦 Installing AUR packages using yay..."
+        yay -S --needed --noconfirm - < "$DOTFILES_DIR/aur_pkglist.txt"
+    fi
 fi
 
 # Enable System Services
 echo "⚙️ Enabling system services..."
-sudo systemctl enable --now docker
-sudo systemctl enable --now tlp
+sudo systemctl enable --now docker 2>/dev/null
+sudo systemctl enable --now tlp 2>/dev/null
 
-# Create Config directory if missing
-mkdir -p "$CONFIG_DIR"
-
-# Backup existing configs
+# 2. Backup existing configs (Matches setup.sh list)
 echo "💾 Backing up existing configs..."
 BACKUP_NAME="$HOME/.dotfiles-backup-$(date +%s)"
 mkdir -p "$BACKUP_NAME"
-configs=("hypr" "rofi" "waybar" "swaync" "wlogout" "kitty" "scripts" "eww" "fastfetch")
+
+configs=(
+    "hypr" "rofi" "waybar" "swaync" "wlogout" 
+    "kitty" "scripts" "eww" "fastfetch" 
+    "dunst" "btop" "cava" "wal" "gtk-3.0" "qt5ct" "qt6ct"
+)
+
 for config in "${configs[@]}"; do
     if [ -d "$CONFIG_DIR/$config" ]; then
-        mv "$CONFIG_DIR/$config" "$BACKUP_NAME/"
+        mv "$CONFIG_DIR/$config" "$BACKUP_NAME/" 2>/dev/null
     fi
 done
 
-# Copy new configs
+# Backup root dotfiles
+cp "$HOME/.zshrc" "$BACKUP_NAME/zshrc" 2>/dev/null
+cp "$HOME/.zshenv" "$BACKUP_NAME/zshenv" 2>/dev/null
+cp "$HOME/.gitconfig" "$BACKUP_NAME/gitconfig" 2>/dev/null
+cp "$HOME/.vimrc" "$BACKUP_NAME/vimrc" 2>/dev/null
+
+# 3. Apply new configs
 echo "📝 Applying configuration files..."
+mkdir -p "$CONFIG_DIR"
 cp -r "$DOTFILES_DIR/config/"* "$CONFIG_DIR/"
 cp -r "$DOTFILES_DIR/wallpapers" "$HOME/"
-cp "$DOTFILES_DIR/config/starship.toml" "$HOME/.config/" 2>/dev/null
+
+# Restore root dotfiles
+cp "$DOTFILES_DIR/zshrc" "$HOME/.zshrc" 2>/dev/null
+cp "$DOTFILES_DIR/zshenv" "$HOME/.zshenv" 2>/dev/null
+cp "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig" 2>/dev/null
+cp "$DOTFILES_DIR/vimrc" "$HOME/.vimrc" 2>/dev/null
 
 # Make scripts executable
-chmod +x "$CONFIG_DIR/scripts/"*
+chmod +x "$CONFIG_DIR/scripts/"* 2>/dev/null
 
-# Generate initial colors
+# 4. Generate initial colors (using your theme script)
 echo "🎨 Generating initial colors..."
-if [ -f "$HOME/wallpapers/Snoopy.jpg" ]; then
+if [ -f "$HOME/wallpapers/Snoopy.jpg" ] && [ -f "$CONFIG_DIR/scripts/theme.sh" ]; then
     "$CONFIG_DIR/scripts/theme.sh" "$HOME/wallpapers/Snoopy.jpg"
 fi
 
-echo "✨ Installation Complete! Log out and back in to Hyprland."
+echo "✨ Installation Complete! Log out and back in to apply changes."

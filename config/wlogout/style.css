@@ -1,5 +1,4 @@
-
-@import "/home/ale/.cache/wal/colors-waybar.css";
+@import url("file:///home/ale/.cache/wal/colors-waybar.css");
 
 * {
     background-image: none;
@@ -7,29 +6,32 @@
 }
 
 window {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(6, 6, 7, 0.5);
 }
 
 button {
     color: @foreground;
     background-color: @background;
-    border-radius: 20px;
+    border-radius: 12px;
     border: 2px solid @blue;
-    margin: 10px;
+    margin: 20px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 25%;
+    background-size: 30%;
+    transition: all 0.2s ease-in-out;
 }
 
 button:hover {
     background-color: @blue;
     color: @background;
     border-color: @foreground;
+    background-size: 38%;
+    border-radius: 40px;
 }
 
-#lock { background-image: image(url("/usr/share/wlogout/icons/lock.png")); }
-#logout { background-image: image(url("/usr/share/wlogout/icons/logout.png")); }
-#suspend { background-image: image(url("/usr/share/wlogout/icons/suspend.png")); }
-#shutdown { background-image: image(url("/usr/share/wlogout/icons/shutdown.png")); }
-#hibernate { background-image: image(url("/usr/share/wlogout/icons/hibernate.png")); }
-#reboot { background-image: image(url("/usr/share/wlogout/icons/reboot.png")); }
+#lock { background-image: image(url("/home/ale/.config/wlogout/icons/lock_white.png")); }
+#logout { background-image: image(url("/home/ale/.config/wlogout/icons/logout_white.png")); }
+#suspend { background-image: image(url("/home/ale/.config/wlogout/icons/suspend_white.png")); }
+#shutdown { background-image: image(url("/home/ale/.config/wlogout/icons/shutdown_white.png")); }
+#hibernate { background-image: image(url("/home/ale/.config/wlogout/icons/hibernate_white.png")); }
+#reboot { background-image: image(url("/home/ale/.config/wlogout/icons/reboot_white.png")); }

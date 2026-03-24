@@ -58,7 +58,8 @@
       (box :spacing 15 :space-evenly false
         (button :onclick "kitty --class nmtui -e nmtui &"
           (label :text "󰖩 ${wifi_ssid}" :class "wifi-text"))
-        (label :text "󰖐 ${weather_temp}" :class "weather-text")
+        (button :onclick "kitty --class weather_float -e sh -c 'curl wttr.in; read' &"
+          (label :text "󰖐 ${weather_temp}" :class "weather-text"))
         (button :onclick "swaync-client -t -sw"
           (label :text "󰂚 ${notification_count}" :class "notif-text"))))
     

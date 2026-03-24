@@ -16,11 +16,22 @@ ICON_TRANS="🌐"
 ICON_COLOR="🖌️"
 ICON_OCR="🔍"
 ICON_BOOT="⚙️"
+ICON_EYE="👁️"
+ICON_AI="🤖"
+ICON_FILE="📂"
+ICON_DEV="💻"
+ICON_DOCKER="🐳"
 
 # Options List
 options=(
     "$ICON_MODE  SERVER MODE"
     "$ICON_DESK  DESKTOP MODE"
+    "$ICON_AI    AI Quick Ask (Selected Text)"
+    "$ICON_FILE  Fuzzy File Search"
+    "$ICON_DEV   Kill Local Port (Rofi)"
+    "$ICON_DOCKER Docker Clean (Prune)"
+    "$ICON_DEV   Prettify JSON (Clipboard)"
+    "$ICON_EYE   Night Shift (Toggle)"
     "$ICON_BOOT  Boot to CLI"
     "$ICON_BOOT  Boot to GUI"
     "$ICON_TRANS Translate Selection (-> IT)"
@@ -58,6 +69,41 @@ case "$choice" in
         sudo rfkill unblock bluetooth wifi &
         sudo systemctl isolate graphical.target &
         notify-send "System" "🚀 Desktop Mode Active"
+        ;;
+    *"Kill Local Port"*)
+        # List ports and the process using them
+        port_list=$(sudo lsof -i -P -n | grep LISTEN | awk '{print $9 " (" $1 " - PID: " $2 ")"}' | sort -u)
+        if [ -z "$port_list" ]; then
+            notify-send "Dev Tools" "No active local ports found."
+        else
+            selected_port=$(echo "$port_list" | rofi -dmenu -p "💀 Kill Port" -config "$ROFI_CONF")
+            if [ -n "$selected_port" ]; then
+                pid=$(echo "$selected_port" | grep -oP "PID: \K\d+")
+                sudo kill -9 "$pid" && notify-send "Dev Tools" "Terminated process $pid on $selected_port"
+            fi
+        fi
+        ;;
+    *"Docker Clean"*)
+        notify-send "Docker" "Pruning containers, networks, and images..."
+        docker system prune -f && notify-send "Docker" "✨ Docker System Cleaned!"
+        ;;
+    *"Prettify JSON"*)
+        json_content=$(wl-paste)
+        if echo "$json_content" | jq . > /dev/null 2>&1; then
+            echo "$json_content" | jq . | wl-copy
+            notify-send "Dev Tools" "JSON formatted and copied to clipboard!"
+        else
+            notify-send "Error" "Clipboard does not contain valid JSON"
+        fi
+        ;;
+    *"AI Quick Ask"*)
+        ~/.config/scripts/ai-ask.sh
+        ;;
+    *"Fuzzy File Search"*)
+        ~/.config/scripts/file-browser.sh
+        ;;
+    *"Night Shift"*)
+        pkill gammastep || gammastep -O 3500 & notify-send "Night Shift" "Warm colors active"
         ;;
     *"Boot to CLI"*)
         sudo systemctl set-default multi-user.target && notify-send "Boot" "Next boot: CLI (Headless)"
