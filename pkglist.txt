@@ -146,6 +146,7 @@ polkit-gnome
 postgresql
 ptyxis
 python-pip
+python-pipx
 python-pywal
 python-rich
 qt5-graphicaleffects
