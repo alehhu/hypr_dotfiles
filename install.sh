@@ -36,6 +36,7 @@ configs=(
     "hypr" "rofi" "waybar" "swaync" "wlogout" 
     "kitty" "scripts" "eww" "fastfetch" 
     "dunst" "btop" "cava" "wal" "gtk-3.0" "qt5ct" "qt6ct"
+    "zsh"
 )
 
 for config in "${configs[@]}"; do
@@ -45,7 +46,6 @@ for config in "${configs[@]}"; do
 done
 
 # Backup root dotfiles
-cp "$HOME/.zshrc" "$BACKUP_NAME/zshrc" 2>/dev/null
 cp "$HOME/.zshenv" "$BACKUP_NAME/zshenv" 2>/dev/null
 cp "$HOME/.gitconfig" "$BACKUP_NAME/gitconfig" 2>/dev/null
 cp "$HOME/.vimrc" "$BACKUP_NAME/vimrc" 2>/dev/null
@@ -57,7 +57,6 @@ cp -r "$DOTFILES_DIR/config/"* "$CONFIG_DIR/"
 cp -r "$DOTFILES_DIR/wallpapers" "$HOME/"
 
 # Restore root dotfiles
-cp "$DOTFILES_DIR/zshrc" "$HOME/.zshrc" 2>/dev/null
 cp "$DOTFILES_DIR/zshenv" "$HOME/.zshenv" 2>/dev/null
 cp "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig" 2>/dev/null
 cp "$DOTFILES_DIR/vimrc" "$HOME/.vimrc" 2>/dev/null

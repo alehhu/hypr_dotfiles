@@ -24,6 +24,7 @@ configs=(
     "gtk-3.0"
     "qt5ct"
     "qt6ct"
+    "zsh"
 )
 
 # Sync configs (using rsync with --delete to remove files not in source)
@@ -37,10 +38,10 @@ done
 
 # 2. Sync home dotfiles (Critical shell/git/vim configs)
 echo " - Syncing root dotfiles..."
-cp "$HOME/.zshrc" "$DOTFILES_DIR/zshrc" 2>/dev/null
 cp "$HOME/.zshenv" "$DOTFILES_DIR/zshenv" 2>/dev/null
 cp "$HOME/.gitconfig" "$DOTFILES_DIR/gitconfig" 2>/dev/null
 cp "$HOME/.vimrc" "$DOTFILES_DIR/vimrc" 2>/dev/null
+# Note: we no longer sync ~/.zshrc as it is now inside ~/.config/zsh/
 
 # Sync single files from .config
 rsync -av "$HOME/.config/starship.toml" "$DOTFILES_DIR/config/" 2>/dev/null
