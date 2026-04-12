@@ -36,7 +36,11 @@ for config in "${configs[@]}"; do
     fi
 done
 
-# 2. Sync home dotfiles (Critical shell/git/vim configs)
+# 2. Remove embedded .git directories to avoid Git warnings
+echo " - Cleaning up embedded .git directories..."
+find "$DOTFILES_DIR/config" -name ".git" -type d -exec rm -rf {} + 2>/dev/null
+
+# 3. Sync home dotfiles (Critical shell/git/vim configs)
 echo " - Syncing root dotfiles..."
 cp "$HOME/.zshenv" "$DOTFILES_DIR/zshenv" 2>/dev/null
 cp "$HOME/.gitconfig" "$DOTFILES_DIR/gitconfig" 2>/dev/null
