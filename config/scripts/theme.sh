@@ -5,9 +5,31 @@ WALLPAPER_DIR="$HOME/wallpapers"
 CACHE_DIR="$HOME/.cache/wal"
 HYPR_CONF="$HOME/.config/hypr/colors.conf"
 
-# Ensure swww-daemon is running
-if ! pgrep -x "swww-daemon" > /dev/null; then
-    swww-daemon &
+# Select wallpaper backend (swww renamed to awww)
+if command -v awww >/dev/null 2>&1; then
+    WALLPAPER_CMD="awww"
+    if command -v awww-daemon >/dev/null 2>&1; then
+        DAEMON_CMD="awww-daemon"
+        DAEMON_NAME="awww-daemon"
+    elif command -v swww-daemon >/dev/null 2>&1; then
+        DAEMON_CMD="swww-daemon"
+        DAEMON_NAME="swww-daemon"
+    else
+        notify-send "Error" "awww found but no daemon (awww-daemon/swww-daemon)."
+        exit 1
+    fi
+elif command -v swww >/dev/null 2>&1; then
+    WALLPAPER_CMD="swww"
+    DAEMON_CMD="swww-daemon"
+    DAEMON_NAME="swww-daemon"
+else
+    notify-send "Error" "Neither awww nor swww found. Install one to set wallpapers."
+    exit 1
+fi
+
+# Ensure daemon is running
+if ! pgrep -x "$DAEMON_NAME" > /dev/null; then
+    "$DAEMON_CMD" &
     sleep 1
 fi
 
@@ -18,8 +40,8 @@ else
     WALLPAPER="$1"
 fi
 
-# Apply wallpaper with swww
-swww img "$WALLPAPER" --transition-type grow --transition-pos "$(hyprctl cursorpos | tr -d ' ')" --transition-step 90
+# Apply wallpaper
+"$WALLPAPER_CMD" img "$WALLPAPER" --transition-type grow --transition-pos "$(hyprctl cursorpos | tr -d ' ')" --transition-step 90
 
 # Generate colors with wal
 wal -i "$WALLPAPER" -q -t
