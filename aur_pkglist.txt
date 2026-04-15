@@ -144,6 +144,7 @@ pipewire-audio
 pipewire-jack
 pipewire-pulse
 pkgstats
+pokemon-colorscripts-go
 polkit-gnome
 postgresql
 ptyxis
@@ -165,6 +166,7 @@ recordmydesktop
 reflector
 rofi
 rofimoji
+ros2-humble
 rsync
 satty
 sddm

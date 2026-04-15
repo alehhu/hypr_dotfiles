@@ -6,7 +6,7 @@ CONFIG_DIR="$HOME/.config"
 
 echo "🚀 Starting Portable Dotfiles Installation..."
 
-# 1. Install Dependencies from Package Lists (The most accurate way)
+# 1. Install Dependencies from Package Lists
 if [ -f "$DOTFILES_DIR/pkglist.txt" ]; then
     echo "📦 Installing core packages from pkglist.txt..."
     sudo pacman -S --needed --noconfirm - < "$DOTFILES_DIR/pkglist.txt"
@@ -27,7 +27,7 @@ echo "⚙️ Enabling system services..."
 sudo systemctl enable --now docker 2>/dev/null
 sudo systemctl enable --now tlp 2>/dev/null
 
-# 2. Backup existing configs (Matches setup.sh list)
+# 2. Backup existing configs
 echo "💾 Backing up existing configs..."
 BACKUP_NAME="$HOME/.dotfiles-backup-$(date +%s)"
 mkdir -p "$BACKUP_NAME"
@@ -53,8 +53,16 @@ cp "$HOME/.vimrc" "$BACKUP_NAME/vimrc" 2>/dev/null
 # 3. Apply new configs
 echo "📝 Applying configuration files..."
 mkdir -p "$CONFIG_DIR"
+# Copy each directory from dotfiles/config to ~/.config/
 cp -r "$DOTFILES_DIR/config/"* "$CONFIG_DIR/"
+# Sync wallpapers folder to ~/wallpapers
 cp -r "$DOTFILES_DIR/wallpapers" "$HOME/"
+
+# Restore ROS2 Docker Workspace scripts
+echo "🐳 Restoring ROS2 Docker Workspace..."
+mkdir -p "$HOME/ros2-workspace/src"
+cp "$DOTFILES_DIR/ros2/Dockerfile" "$HOME/ros2-workspace/" 2>/dev/null
+cp "$DOTFILES_DIR/ros2/docker-compose.yml" "$HOME/ros2-workspace/" 2>/dev/null
 
 # Restore root dotfiles
 cp "$DOTFILES_DIR/zshenv" "$HOME/.zshenv" 2>/dev/null
@@ -64,10 +72,19 @@ cp "$DOTFILES_DIR/vimrc" "$HOME/.vimrc" 2>/dev/null
 # Make scripts executable
 chmod +x "$CONFIG_DIR/scripts/"* 2>/dev/null
 
-# 4. Generate initial colors (using your theme script)
+# 4. Generate initial colors
 echo "🎨 Generating initial colors..."
-if [ -f "$HOME/wallpapers/Snoopy.jpg" ] && [ -f "$CONFIG_DIR/scripts/theme.sh" ]; then
-    "$CONFIG_DIR/scripts/theme.sh" "$HOME/wallpapers/Snoopy.jpg"
+THEME_SCRIPT="$CONFIG_DIR/scripts/theme.sh"
+if [ -f "$THEME_SCRIPT" ]; then
+    # Use Snoopy.jpg if available, else use a random one from the folder
+    if [ -f "$HOME/wallpapers/Snoopy.jpg" ]; then
+        "$THEME_SCRIPT" "$HOME/wallpapers/Snoopy.jpg"
+    else
+        RANDOM_WALLPAPER=$(find "$HOME/wallpapers" -type f | shuf -n 1)
+        if [ -n "$RANDOM_WALLPAPER" ]; then
+            "$THEME_SCRIPT" "$RANDOM_WALLPAPER"
+        fi
+    fi
 fi
 
 echo "✨ Installation Complete! Log out and back in to apply changes."
